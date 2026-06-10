@@ -66,32 +66,72 @@ cp -r siti-grants ~/.claude/skills/siti-grants
 
 ---
 
-## MCP Server（進階，v1.0 skeleton）
+## MCP Server（進階，v1.1）
 
-讓 Claude Desktop / 任何 MCP client 直接呼叫 SITI 查詢工具：
+讓 Claude Desktop / 任何 MCP client 直接呼叫 SITI 查詢工具。
+
+### 安裝步驟
 
 ```bash
-# 安裝依賴
+# 1. 安裝依賴（含 chromadb + anthropic）
 pip install -r server/requirements.txt
 
-# 抓取 2,428 筆通過案例（約 30-60s，需連 data.taipei）
+# 2. 抓取 2,428 筆通過案例（約 30-60s，需連 data.taipei）
 python scripts/build_cases.py
 
-# 加入 MCP 設定（claude_desktop_config.json 或 .mcp.json）
+# 3. 建立向量索引（首次約 2-3 分鐘，下載 ~80MB embedding model）
+python scripts/build_index.py
+
+# 4. 設定 Anthropic API Key（generate_proposal_section 工具必要）
+export ANTHROPIC_API_KEY=sk-ant-...          # Mac/Linux
+$env:ANTHROPIC_API_KEY = "sk-ant-..."        # Windows PowerShell
 ```
+
+### MCP 設定
 
 ```json
 {
   "mcpServers": {
     "siti-grants": {
       "command": "python",
-      "args": ["/path/to/siti-grants/server/server.py"]
+      "args": ["/path/to/siti-grants/server/server.py"],
+      "env": {
+        "ANTHROPIC_API_KEY": "sk-ant-..."
+      }
     }
   }
 }
 ```
 
-三個可呼叫工具：`check_eligibility`（資格判斷）/ `search_approved_cases`（案例搜尋）/ `get_taipei_statistics`（台北市統計數字）
+### 可呼叫工具（4 個）
+
+| 工具 | 說明 |
+|------|------|
+| `check_eligibility` | 輸入公司設立年數 + 特徵，回傳可申請計畫清單與理由 |
+| `search_approved_cases` | **向量語意搜尋**通過案例（Chroma，退化為 BM25）|
+| `get_taipei_statistics` | 台北市人口/企業數/GDP 統計數字（計畫書引用用）|
+| `generate_proposal_section` | **AI 生成**計畫書段落（見下方）|
+
+### `generate_proposal_section` 詳細說明
+
+使用 Claude Haiku 根據你的公司描述自動生成計畫書段落。
+
+**section 類型**：
+
+| 類型 | 輸出內容 |
+|------|---------|
+| `背景敘事弧` | 觀察 → 痛點 → 國際對標 → 量化市場 → 解方，五段完整敘事 |
+| `創新性對照表` | 目標項目 ∣ 現況 ∣ 完成後狀況，≥5 列 Markdown 表格 |
+| `效益分析表` | 產值 / 研發 / 投資 / 就業 / 新產品 / 降成本六欄含估算 |
+| `實施方法摘要` | Ph0→Ph4 五階段 + 季度查核點（Q1/Q2/Q3/Q4）|
+
+**呼叫範例**：
+
+```
+幫我生成 SITI 創新研發補助的「背景敘事弧」段落
+公司：AI 聲學監測 SaaS，主要幫工廠做設備預測保養
+產業：製造業 / 智慧製造
+```
 
 ---
 
@@ -106,7 +146,7 @@ python scripts/build_cases.py
 - ✅ **常見地雷清單**：8 大失敗原因與改法
 - ✅ **申請策略深度指南**：選計畫 × 金額策略 × 多案時序規劃 × SITI+SBIR 組合
 - ✅ **主題式研發攻略**：梯次型計畫監測法 × 72 小時評估 × 備戰策略
-- 🔜 **MCP Server**（向量搜尋 + 計畫書 AI 生成，v1.0）
+- ✅ **MCP Server v1.1**：Chroma 向量語意搜尋（2,428 案例）+ Claude Haiku 計畫書段落 AI 生成
 
 ---
 
@@ -118,7 +158,8 @@ python scripts/build_cases.py
 | **v0.2** | 創業/品牌模板 + 主題式研發攻略 + 申請策略深度指南 | ✅ 完成 |
 | **v0.3** | data.taipei 9 大問題領域 × 16 個資料集 + batch 驗證腳本 | ✅ 完成 |
 | **v1.0** | MCP Server skeleton（check_eligibility / search_approved_cases / get_taipei_statistics）+ build_cases.py | ✅ Skeleton 完成 |
-| v1.1 | cases.json 建置 + vector search 升級（Chroma）+ 計畫書段落 AI 生成 | 🔜 |
+| **v1.1** | cases.json 2,428 筆 + Chroma 向量搜尋 + `generate_proposal_section`（Haiku AI 生成四類段落）| ✅ 完成 |
+| v1.2 | 多語言 embedding（中文優化）+ 更多 data.taipei 資料集整合 | 🔜 |
 
 ---
 
