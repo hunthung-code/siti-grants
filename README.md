@@ -5,6 +5,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Skill-blue)](https://claude.ai/code)
 
+![Demo](https://raw.githubusercontent.com/hunthung-code/siti-grants/master/docs/siti_demo.gif)
+
 ---
 
 ## SITI 是什麼？
@@ -40,13 +42,13 @@ Copy-Item -Recurse siti-grants $env:USERPROFILE\.claude\skills\siti-grants
 ### 方法二：npx 一鍵安裝
 
 ```bash
-npx skills add hunthung-code/siti-grants
+npx skills add siegfi/siti-grants
 ```
 
 ### 方法三：Clone 後安裝
 
 ```bash
-git clone https://github.com/hunthung-code/siti-grants
+git clone https://github.com/siegfi/siti-grants
 cp -r siti-grants ~/.claude/skills/siti-grants
 ```
 
@@ -171,6 +173,6 @@ MIT License — 自由使用、修改、分發。
 
 ## 聯絡
 
-發現錯誤或有建議：[GitHub Issues](https://github.com/hunthung-code/siti-grants/issues)
+發現錯誤或有建議：[GitHub Issues](https://github.com/siegfi/siti-grants/issues)
 
 > ⚠️ 本工具僅供參考，不保證申請通過。請以 [SITI 官方公告](https://industry-incentive.taipei) 為準。
