@@ -5,7 +5,7 @@ allowed-tools: [Read, Write, Edit, Bash]
 license: MIT
 metadata:
   skill-author: xingsheng
-  version: 0.2.0
+  version: 0.3.0
   last-updated: 2026-06-10
 ---
 
@@ -128,6 +128,47 @@ metadata:
 | `templates/rnd_proposal_template.md` | 研發補助計畫書完整模板（含金額策略提示）|
 | `templates/startup_proposal_template.md` | **創業補助計畫書完整模板**（100萬，設立未滿1年）|
 | `templates/brand_proposal_template.md` | **品牌建立補助計畫書完整模板**（500萬，含廣告費判斷）|
+| `server/server.py` | **MCP Server（v1.0）** — 三個工具：check_eligibility / search_approved_cases / get_taipei_statistics |
+| `server/requirements.txt` | MCP server 依賴（mcp>=1.0.0，Python 3.11+）|
+| `scripts/build_cases.py` | 從 data.taipei API 抓取 2,428 筆通過案例 → `data/cases.json` |
+
+---
+
+## MCP Server（v1.0）
+
+> **狀態**：skeleton 完成，`data/cases.json` 需先執行 `python scripts/build_cases.py` 生成。
+
+### 安裝
+
+```bash
+# 1. 安裝依賴
+pip install -r server/requirements.txt
+
+# 2. 抓取通過案例資料（需連 data.taipei，約 30-60s）
+python scripts/build_cases.py
+
+# 3. 在 Claude Desktop 或任何支援 MCP 的 client 加入設定
+```
+
+**MCP config（`claude_desktop_config.json` 或 `.mcp.json`）**：
+```json
+{
+  "mcpServers": {
+    "siti-grants": {
+      "command": "python",
+      "args": ["<path-to-siti-grants>/server/server.py"]
+    }
+  }
+}
+```
+
+### 工具說明
+
+| 工具 | 說明 |
+|-----|------|
+| `check_eligibility(company_age_months, has_revenue, investment_amount_twd, primary_need)` | 資格判斷 + 推薦計畫 + 申請金額建議 |
+| `search_approved_cases(query, program_type, top_k)` | BM25 關鍵字搜尋歷史通過案例（需先建 data/cases.json）|
+| `get_taipei_statistics(category)` | 回傳 9 大問題領域的 data.taipei 統計數字 + 計畫書引用語句 |
 
 ---
 

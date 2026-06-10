@@ -66,6 +66,35 @@ cp -r siti-grants ~/.claude/skills/siti-grants
 
 ---
 
+## MCP Server（進階，v1.0 skeleton）
+
+讓 Claude Desktop / 任何 MCP client 直接呼叫 SITI 查詢工具：
+
+```bash
+# 安裝依賴
+pip install -r server/requirements.txt
+
+# 抓取 2,428 筆通過案例（約 30-60s，需連 data.taipei）
+python scripts/build_cases.py
+
+# 加入 MCP 設定（claude_desktop_config.json 或 .mcp.json）
+```
+
+```json
+{
+  "mcpServers": {
+    "siti-grants": {
+      "command": "python",
+      "args": ["/path/to/siti-grants/server/server.py"]
+    }
+  }
+}
+```
+
+三個可呼叫工具：`check_eligibility`（資格判斷）/ `search_approved_cases`（案例搜尋）/ `get_taipei_statistics`（台北市統計數字）
+
+---
+
 ## 內容涵蓋
 
 - ✅ **資格快速判斷**：10 分鐘確認適合申請哪個計畫（全計畫覆蓋含育成/獎勵補貼）
@@ -87,8 +116,9 @@ cp -r siti-grants ~/.claude/skills/siti-grants
 |-----|------|------|
 | **v0.1** | 全計畫規則 + 案例分析 + 台北市問題圖 + 研發模板 + 自查清單 | ✅ 完成 |
 | **v0.2** | 創業/品牌模板 + 主題式研發攻略 + 申請策略深度指南 | ✅ 完成 |
-| v0.3 | data.taipei 更多資料集整合（商業登記/就業統計）| 🔜 |
-| v1.0 | MCP Server（向量搜尋 + 計畫書 AI 生成）| 🔜 |
+| **v0.3** | data.taipei 9 大問題領域 × 16 個資料集 + batch 驗證腳本 | ✅ 完成 |
+| **v1.0** | MCP Server skeleton（check_eligibility / search_approved_cases / get_taipei_statistics）+ build_cases.py | ✅ Skeleton 完成 |
+| v1.1 | cases.json 建置 + vector search 升級（Chroma）+ 計畫書段落 AI 生成 | 🔜 |
 
 ---
 
