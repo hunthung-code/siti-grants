@@ -37,11 +37,17 @@ cp -r siti-grants ~/.claude/skills/siti-grants
 Copy-Item -Recurse siti-grants $env:USERPROFILE\.claude\skills\siti-grants
 ```
 
-### 方法二：Clone 後安裝
+### 方法二：npx 一鍵安裝
 
 ```bash
-git clone https://github.com/<your-username>/siti-grants
-cp -r siti-grants/siti-grants ~/.claude/skills/siti-grants
+npx skills add siegfi/siti-grants
+```
+
+### 方法三：Clone 後安裝
+
+```bash
+git clone https://github.com/siegfi/siti-grants
+cp -r siti-grants ~/.claude/skills/siti-grants
 ```
 
 ---
@@ -94,6 +100,6 @@ MIT License — 自由使用、修改、分發。
 
 ## 聯絡
 
-發現錯誤或有建議：[GitHub Issues](https://github.com/<your-username>/siti-grants/issues)
+發現錯誤或有建議：[GitHub Issues](https://github.com/siegfi/siti-grants/issues)
 
 > ⚠️ 本工具僅供參考，不保證申請通過。請以 [SITI 官方公告](https://industry-incentive.taipei) 為準。
